@@ -1,0 +1,21 @@
+services:
+  - type: worker
+    name: cubixora-discord-bot
+    runtime: node
+    buildCommand: pnpm install --frozen-lockfile
+    startCommand: pnpm --filter @workspace/discord-bot start
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: OWNER_IDS
+        sync: false
+      - key: MC_WEBHOOK_SECRET
+        sync: false
+      - key: MC_HOST
+        value: cubixorasmp.play.hosting
+      - key: MC_PORT
+        value: "19132"
+      - key: SITE_URL
+        value: https://cubixoraweb.onrender.com

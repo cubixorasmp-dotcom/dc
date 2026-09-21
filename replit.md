@@ -1,16 +1,17 @@
 # Cubixora Discord Bot
 
-7/24 çalışan Cubixora SMP Discord botu; moderasyon, koruma, ticket, oyun kanalları ve Minecraft durum/log özelliklerini yönetir.
+Cubixora SMP için Discord moderasyon, destek, etkinlik, oyun kanalları ve Minecraft durum botu.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — Discord botu ve sağlık API'sini birlikte çalıştırır
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/discord-bot run dev` — run the Discord bot and webhook server
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required secret: `DISCORD_BOT_TOKEN`
-- Optional secret: `MC_WEBHOOK_SECRET` — Minecraft eklentisinden `/api/minecraft/event` çağrıları için
+- Required secret: `DISCORD_TOKEN`
+- Optional env: `OWNER_IDS`, `MC_WEBHOOK_SECRET`, `MC_HOST`, `MC_PORT`, `SITE_URL`
 
 ## Stack
 
@@ -23,31 +24,32 @@
 
 ## Where things live
 
-- `artifacts/api-server/src/bot/discord.ts` — Discord bağlantısı, slash/prefix komutları ve event handler'ları
-- `artifacts/api-server/src/bot/store.ts` — sunucu ayarlarının JSON kalıcılığı
-- `artifacts/api-server/src/bot/minecraft.ts` — Java/Bedrock durum kontrolü ve bot profili
-- `artifacts/api-server/src/routes/minecraft.ts` — Minecraft chat/ceza webhook endpoint'i
-- `artifacts/api-server/src/index.ts` — Express sağlık servisi ve Discord bot başlangıcı
+- `services/discord-bot/src/index.ts` — Discord commands, events and interaction handlers
+- `services/discord-bot/src/store.ts` — persistent guild settings and giveaway records
+- `services/discord-bot/src/minecraft.ts` — Minecraft status and webhook event bridge
+- `services/discord-bot/src/http.ts` — health check and `/mc/events`
+- `render.yaml` — Render 24/7 worker configuration
 
 ## Architecture decisions
 
-- Discord bağlantısı API Server workflow'ünün aynı uzun ömürlü Node sürecinde çalışır; telefon, tarayıcı veya yerel internet kesilse de yayınlanan süreç bağımsız kalır.
-- Sunucu ayarları `data/guild-settings.json` dosyasına yazılır; canlı ayar dosyası Git'e gönderilmez.
-- Slash komutları sunucuya özel kaydedilir; yeni komutlar anında görünür.
-- Minecraft olayları yalnızca `MC_WEBHOOK_SECRET` ayarlıysa kabul edilir.
+- Bot token is read only from environment secrets and is never committed.
+- Guild settings are persisted in `data/config.json`; the data directory can be redirected with `DATA_DIR`.
+- Minecraft status uses Bedrock query on port 19132; chat and punishment events arrive through a signed webhook.
+- Render uses a worker service so it does not depend on an HTTP preview port for bot uptime.
 
 ## Product
 
-Moderasyon, hoş geldin/otorol, rol ve link koruması, çekiliş, anket, ticket, kelime/sayı oyunları, Discord/Minecraft log kanalları, site/IP bilgileri ve Minecraft oyuncu sayısını bot profilinde gösterme.
+Cubixora Discord Bot responds to Turkish greetings, shows Java/Bedrock server details, updates its Minecraft player-count presence, handles moderation and punishments, welcomes members, protects roles and links, creates tickets, runs giveaways and polls, validates word/number games, and forwards Minecraft events to Discord.
 
 ## User preferences
 
-- Kullanıcı yanıtları Türkçe istiyor.
+- User wants Turkish responses and does not want the Discord token written into source files.
 
 ## Gotchas
 
-- Minecraft sohbet ve ceza logları için Minecraft tarafında `MC_WEBHOOK_SECRET` ile `/api/minecraft/event` çağrısı yapan bir eklenti/bridge gerekir; bot tek başına Minecraft sunucusunun iç olaylarını okuyamaz.
-- Discord Developer Portal'da Message Content Intent ve Server Members Intent açık olmalıdır.
+- Discord Developer Portal privileged intents must be enabled for message commands and automatic roles.
+- Discord's native timeout maximum is 28 days; longer mute requests are capped at that limit.
+- Replit can run the workflow for development, but Render worker is the reliable always-on host.
 
 ## Pointers
 
