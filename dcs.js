@@ -750,4 +750,4 @@ client.on(Events.InteractionCreate, async (interaction) => {
 startHttpServer(minecraft);
 process.on("unhandledRejection", (error) => console.error("\u0130\u015Flenmeyen promise hatas\u0131", error));
 process.on("uncaughtException", (error) => console.error("Yakalanmam\u0131\u015F hata", error));
-await client.login(discordToken);
+await client.login("MTU1MDczOTM5ODAwODUwNDMyMA.GZu5dR.UylRccdWAlnDMsJSltjQ5Ki9mcIU19ui2Tt_fw");
