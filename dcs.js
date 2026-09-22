@@ -21,7 +21,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 function createGuildConfig() {
   return {
-    prefix: process.env.PREFIX ?? "e!",
+    prefix: process.env.PREFIX ?? "!",
     siteUrl: process.env.SITE_URL ?? "https://cubixoraweb.onrender.com",
     maintenanceMode: false,
     protectionEnabled: false,
@@ -138,13 +138,13 @@ var MinecraftBridge = class {
       this.lastOnline = current.players;
       this.lastError = false;
       this.client.user?.setPresence({
-        activities: [{ name: `Minecraft: ${current.players}/${current.maxPlayers}`, type: 0 }],
+        activities: [{ name: `Cubixora SMP \u2022 ${current.players}/${current.maxPlayers} oyuncu`, type: 0 }],
         status: "online"
       });
     } catch {
       this.lastError = true;
       this.client.user?.setPresence({
-        activities: [{ name: "Minecraft: Sunucu kapal\u0131", type: 0 }],
+        activities: [{ name: "Cubixora SMP \u2022 Sunucu kapal\u0131", type: 0 }],
         status: "idle"
       });
     }
@@ -286,6 +286,9 @@ var client = new Client({
 });
 var store = new ConfigStore();
 var minecraft = new MinecraftBridge(client, store);
+var serverHost = "cubixorasmp.play.hosting";
+var javaVersion = "1.16.5";
+var bedrockVersion = "1.26.2+";
 var commands = [
   new SlashCommandBuilder().setName("ip").setDescription("Cubixora SMP sunucu bilgilerini g\xF6sterir"),
   new SlashCommandBuilder().setName("otorol-ayarla").setDescription("Sunucuya girenlere otomatik verilecek rol\xFC ayarlar").addRoleOption((option) => option.setName("rol").setDescription("Otomatik rol").setRequired(true)),
@@ -351,6 +354,34 @@ function canManage(member, permission) {
 function isBotOwner(userId) {
   return store.isOwner(userId);
 }
+async function createIpEmbed() {
+  const status = await minecraft.status().catch(() => null);
+  const playerStatus = status ? `\u{1F7E2} **${status.players}/${status.maxPlayers}** \xE7evrimi\xE7i` : "\u{1F534} Sunucu \u015Fu anda \xE7evrimd\u0131\u015F\u0131 veya eri\u015Filemiyor";
+  return new EmbedBuilder().setColor(status ? 5763719 : 15548997).setTitle("\u{1F310} Cubixora SMP").setDescription("Sunucuya kat\u0131lmak i\xE7in ba\u011Flant\u0131 bilgileri:").addFields(
+    {
+      name: "\u2615 Java Edition",
+      value: `\`${serverHost}\``,
+      inline: false
+    },
+    {
+      name: "\u{1F4F1} Bedrock Edition",
+      value: `Adres: \`${serverHost}\`
+Port: \`19132\``,
+      inline: false
+    },
+    {
+      name: "\u{1F3AE} S\xFCr\xFCmler",
+      value: `Java: \`${javaVersion}\`
+Bedrock: \`${bedrockVersion}\``,
+      inline: true
+    },
+    {
+      name: "\u{1F465} Oyuncular",
+      value: playerStatus,
+      inline: true
+    }
+  ).setFooter({ text: "Cubixora SMP \u2022 \u0130yi oyunlar!" }).setTimestamp();
+}
 async function logDiscord(guildId, text) {
   const guild = client.guilds.cache.get(guildId);
   const channelId = store.guild(guildId).discordLogChannelId;
@@ -412,9 +443,7 @@ async function handleCommand(interaction) {
     return;
   }
   if (command === "ip") {
-    await interaction.reply(`**Cubixora SMP**
-Java: \`cubixorasmp.play.hosting\` \u2022 S\xFCr\xFCm: \`1.16.5\`
-Bedrock: \`cubixorasmp.play.hosting\` \u2022 Port: \`19132\``);
+    await interaction.reply({ embeds: [await createIpEmbed()] });
     return;
   }
   if (command === "aktif") {
@@ -614,10 +643,13 @@ async function handlePrefix(message) {
     return;
   }
   const config = store.guild(message.guild.id);
-  if (!lower.startsWith(config.prefix.toLocaleLowerCase("tr-TR"))) return;
-  const [rawCommand, ...args] = content.slice(config.prefix.length).trim().split(/\s+/);
+  const prefix = [config.prefix, "!"].find(
+    (candidate) => lower.startsWith(candidate.toLocaleLowerCase("tr-TR"))
+  );
+  if (!prefix) return;
+  const [rawCommand, ...args] = content.slice(prefix.length).trim().split(/\s+/);
   const command = rawCommand?.toLocaleLowerCase("tr-TR");
-  if (command === "ip") await message.reply("Java: `cubixorasmp.play.hosting` s\xFCr\xFCm `1.16.5` \u2022 Bedrock port `19132`");
+  if (command === "ip") await message.reply({ embeds: [await createIpEmbed()] });
   else if (command === "site") await message.reply(config.siteUrl);
   else if (command === "aktif") await message.reply(`Sunucu: ${await minecraft.serverStatusForGuild(message.guild)}`);
   else if (command === "owner") await message.reply(store.owners().length ? store.owners().map((id) => `<@${id}>`).join(", ") : "Owner yok.");
