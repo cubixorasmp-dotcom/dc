@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Cubixora SMP Discord Botu",
   "main": "dcs.js",
+  "type": "module",
   "scripts": {
     "start": "node dcs.js"
   },
