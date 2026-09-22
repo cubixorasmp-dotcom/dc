@@ -103,7 +103,7 @@ var ConfigStore = class {
 
 // services/discord-bot/src/minecraft.ts
 import { ActivityType } from "discord.js";
-import { statusBedrock } from "minecraft-server-util";
+import { status as statusJava } from "minecraft-server-util";
 var MinecraftBridge = class {
   constructor(client2, store2) {
     this.client = client2;
@@ -112,10 +112,11 @@ var MinecraftBridge = class {
   client;
   store;
   host = process.env.MC_HOST ?? "cubixorasmp.play.hosting";
-  port = Number(process.env.MC_PORT ?? 19132);
+  port = Number(process.env.MC_JAVA_PORT ?? 25565);
   intervalMs = Number(process.env.MC_STATUS_INTERVAL_MS ?? 6e4);
   timer;
   lastOnline = null;
+  lastMaxPlayers = null;
   lastError = false;
   start() {
     void this.updatePresence();
@@ -125,7 +126,7 @@ var MinecraftBridge = class {
     if (this.timer) clearInterval(this.timer);
   }
   async status() {
-    const response = await statusBedrock(this.host, this.port, { timeout: 5e3 });
+    const response = await statusJava(this.host, this.port, { timeout: 5e3 });
     return {
       online: true,
       players: response.players.online,
@@ -134,12 +135,23 @@ var MinecraftBridge = class {
     };
   }
   async updatePresence() {
+    const maintenanceMode = [...this.client.guilds.cache.values()].some(
+      (guild) => this.store.guild(guild.id).maintenanceMode
+    );
+    if (maintenanceMode) {
+      this.client.user?.setPresence({
+        activities: [{ name: "Bak\u0131m modu", type: ActivityType.Watching }],
+        status: "idle"
+      });
+      return;
+    }
     try {
       const current = await this.status();
       this.lastOnline = current.players;
+      this.lastMaxPlayers = current.maxPlayers;
       this.lastError = false;
       this.client.user?.setPresence({
-        activities: [{ name: `Sunucuda ${current.players} ki\u015Fi var`, type: ActivityType.Watching }],
+        activities: [{ name: `Sunucuda ${current.players}/${current.maxPlayers} ki\u015Fi var`, type: ActivityType.Watching }],
         status: "online"
       });
     } catch {
@@ -151,9 +163,9 @@ var MinecraftBridge = class {
     }
   }
   summary() {
-    if (this.lastError) return "Sunucu kapal\u0131 veya eri\u015Filemiyor";
-    if (this.lastOnline === null) return "Durum kontrol ediliyor";
-    return `${this.lastOnline} oyuncu \xE7evrimi\xE7i`;
+    if (this.lastError) return "\u{1F534} Sunucu kapal\u0131 veya eri\u015Filemiyor";
+    if (this.lastOnline === null) return "\u23F3 Sunucu durumu kontrol ediliyor";
+    return `\u{1F7E2} Sunucu a\xE7\u0131k \u2022 ${this.lastOnline}/${this.lastMaxPlayers ?? "?"} oyuncu \xE7evrimi\xE7i`;
   }
   async sendEvent(event) {
     const typeLabel = {
@@ -176,7 +188,15 @@ var MinecraftBridge = class {
   }
   async serverStatusForGuild(guild) {
     const config = this.store.guild(guild.id);
-    if (config.maintenanceMode) return "Bak\u0131m modu a\xE7\u0131k";
+    if (config.maintenanceMode) return "\u{1F6E0}\uFE0F Bak\u0131m modu a\xE7\u0131k";
+    try {
+      const current = await this.status();
+      this.lastOnline = current.players;
+      this.lastMaxPlayers = current.maxPlayers;
+      this.lastError = false;
+    } catch {
+      this.lastError = true;
+    }
     return this.summary();
   }
 };
@@ -288,6 +308,7 @@ var client = new Client({
 var store = new ConfigStore();
 var minecraft = new MinecraftBridge(client, store);
 var serverHost = "cubixorasmp.play.hosting";
+var javaPort = 25565;
 var javaVersion = "1.16.5";
 var bedrockVersion = "1.26.2+";
 var commands = [
@@ -361,7 +382,8 @@ async function createIpEmbed() {
   return new EmbedBuilder().setColor(status ? 5763719 : 15548997).setTitle("\u{1F310} Cubixora SMP").setDescription("Sunucuya kat\u0131lmak i\xE7in ba\u011Flant\u0131 bilgileri:").addFields(
     {
       name: "\u2615 Java Edition",
-      value: `\`${serverHost}\``,
+      value: `Adres: \`${serverHost}\`
+Port: \`${javaPort}\``,
       inline: false
     },
     {
@@ -563,6 +585,7 @@ async function handleCommand(interaction) {
     if (!canManage(member, PermissionFlagsBits.ManageGuild)) return void interaction.reply({ content: "Sunucuyu Y\xF6net yetkisi gerekli.", ephemeral: true });
     const enabled = interaction.options.getString("durum", true) === "acik";
     store.updateGuild(interaction.guild.id, { maintenanceMode: enabled });
+    void minecraft.updatePresence();
     await interaction.reply(`Bak\u0131m modu ${enabled ? "a\xE7\u0131ld\u0131" : "kapat\u0131ld\u0131"}.`);
     return;
   }
