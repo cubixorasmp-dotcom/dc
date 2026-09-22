@@ -694,10 +694,27 @@ async function handlePrefix(message) {
 async function registerCommands() {
   if (!client.user) return;
   const rest = new REST({ version: "10" }).setToken(discordToken);
+  const guilds = [...client.guilds.cache.values()];
+
+  if (guilds.length > 0) {
+    for (const guild of guilds) {
+      await rest.put(Routes.applicationGuildCommands(client.user.id, guild.id), { body: commands });
+    }
+    // Eski global komutları temizle; sunucuda yalnızca güncel komutlar görünsün.
+    await rest.put(Routes.applicationCommands(client.user.id), { body: [] });
+    console.info(`${commands.length} komut ${guilds.length} sunucuya kaydedildi.`);
+    return;
+  }
+
   await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
+  console.info(`${commands.length} global komut kaydedildi.`);
 }
 client.once(Events.ClientReady, async (readyClient) => {
-  await registerCommands();
+  try {
+    await registerCommands();
+  } catch (error) {
+    console.error("Slash komutları kaydedilemedi:", error);
+  }
   minecraft.start();
   for (const giveaway of store.giveaways()) scheduleGiveaway(giveaway.id, giveaway.endsAt - Date.now());
   readyClient.user.setActivity("Cubixora SMP", { type: ActivityType2.Playing });
