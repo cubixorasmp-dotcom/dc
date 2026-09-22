@@ -2,7 +2,7 @@
 import "dotenv/config";
 import {
   ActionRowBuilder,
-  ActivityType,
+  ActivityType as ActivityType2,
   ButtonBuilder,
   ButtonStyle,
   ChannelType,
@@ -102,6 +102,7 @@ var ConfigStore = class {
 };
 
 // services/discord-bot/src/minecraft.ts
+import { ActivityType } from "discord.js";
 import { statusBedrock } from "minecraft-server-util";
 var MinecraftBridge = class {
   constructor(client2, store2) {
@@ -138,13 +139,13 @@ var MinecraftBridge = class {
       this.lastOnline = current.players;
       this.lastError = false;
       this.client.user?.setPresence({
-        activities: [{ name: `Cubixora SMP \u2022 ${current.players}/${current.maxPlayers} oyuncu`, type: 0 }],
+        activities: [{ name: `Sunucuda ${current.players} ki\u015Fi var`, type: ActivityType.Watching }],
         status: "online"
       });
     } catch {
       this.lastError = true;
       this.client.user?.setPresence({
-        activities: [{ name: "Cubixora SMP \u2022 Sunucu kapal\u0131", type: 0 }],
+        activities: [{ name: "Sunucu kapal\u0131", type: ActivityType.Watching }],
         status: "idle"
       });
     }
@@ -676,7 +677,7 @@ client.once(Events.ClientReady, async (readyClient) => {
   await registerCommands();
   minecraft.start();
   for (const giveaway of store.giveaways()) scheduleGiveaway(giveaway.id, giveaway.endsAt - Date.now());
-  readyClient.user.setActivity("Cubixora SMP", { type: ActivityType.Playing });
+  readyClient.user.setActivity("Cubixora SMP", { type: ActivityType2.Playing });
   console.info(`Discord bot haz\u0131r: ${readyClient.user.tag}`);
 });
 client.on(Events.GuildMemberAdd, async (member) => {
