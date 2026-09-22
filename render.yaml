@@ -2,8 +2,8 @@ services:
   - type: worker
     name: cubixora-discord-bot
     runtime: node
-    buildCommand: npm install
-    startCommand: node dcs.js
+    buildCommand: pnpm install --frozen-lockfile
+    startCommand: pnpm --filter @workspace/discord-bot start
     envVars:
       - key: NODE_VERSION
         value: "24"
@@ -15,7 +15,7 @@ services:
         sync: false
       - key: MC_HOST
         value: cubixorasmp.play.hosting
-      - key: MC_PORT
-        value: "19132"
+      - key: MC_JAVA_PORT
+        value: "25565"
       - key: SITE_URL
         value: https://cubixoraweb.onrender.com
