@@ -318,8 +318,8 @@ var commands = [
   new SlashCommandBuilder().setName("sil").setDescription("1 ile 1000 aras\u0131nda mesaj siler").addIntegerOption(
     (option) => option.setName("miktar").setDescription("Silinecek mesaj say\u0131s\u0131").setMinValue(1).setMaxValue(1e3).setRequired(true)
   ),
-  new SlashCommandBuilder().setName("ban").setDescription("\xDCyeyi sunucudan yasaklar").addUserOption((option) => option.setName("\xFCye").setDescription("Yasaklanacak \xFCye").setRequired(true)).addStringOption((option) => option.setName("sebep").setDescription("Ban sebebi").setRequired(true)),
-  new SlashCommandBuilder().setName("mute").setDescription("\xDCyeyi s\xFCreli susturur").addUserOption((option) => option.setName("\xFCye").setDescription("Susturulacak \xFCye").setRequired(true)).addIntegerOption((option) => option.setName("s\xFCre").setDescription("S\xFCre").setMinValue(1).setRequired(true)).addStringOption(
+  new SlashCommandBuilder().setName("ban").setDescription("\xDCyeyi sunucudan yasaklar").addUserOption((option) => option.setName("uye").setDescription("Yasaklanacak uye").setRequired(true)).addStringOption((option) => option.setName("sebep").setDescription("Ban sebebi").setRequired(true)),
+  new SlashCommandBuilder().setName("mute").setDescription("\xDCyeyi sureli susturur").addUserOption((option) => option.setName("uye").setDescription("Susturulacak uye").setRequired(true)).addIntegerOption((option) => option.setName("sure").setDescription("S\xFCre").setMinValue(1).setRequired(true)).addStringOption(
     (option) => option.setName("birim").setDescription("S\xFCre birimi").setRequired(true).addChoices(
       { name: "Saniye", value: "saniye" },
       { name: "Dakika", value: "dakika" },
@@ -332,29 +332,29 @@ var commands = [
   new SlashCommandBuilder().setName("koruma-rol").setDescription("Etiketlenen rol\xFC koruma sistemine ekler").addRoleOption((option) => option.setName("rol").setDescription("Korunacak rol").setRequired(true)),
   new SlashCommandBuilder().setName("koruma-list").setDescription("Koruma rol\xFCn\xFC g\xF6sterir"),
   new SlashCommandBuilder().setName("koruma-cikar").setDescription("Koruma rol\xFCn\xFC kald\u0131r\u0131r"),
-  new SlashCommandBuilder().setName("cekilis").setDescription("\xC7ekili\u015F ba\u015Flat\u0131r").addStringOption((option) => option.setName("ba\u015Fl\u0131k").setDescription("\xC7ekili\u015F ba\u015Fl\u0131\u011F\u0131").setRequired(true)).addStringOption((option) => option.setName("\xF6d\xFCl").setDescription("Birinci \xF6d\xFCl").setRequired(true)).addIntegerOption((option) => option.setName("kazanan-say\u0131s\u0131").setDescription("Kazanan say\u0131s\u0131").setMinValue(1).setMaxValue(50).setRequired(true)).addIntegerOption((option) => option.setName("s\xFCre").setDescription("S\xFCre").setMinValue(1).setRequired(true)).addStringOption(
+  new SlashCommandBuilder().setName("cekilis").setDescription("\xC7ekili\u015F ba\u015Flat\u0131r").addStringOption((option) => option.setName("baslik").setDescription("\xC7ekili\u015F ba\u015Fl\u0131\u011F\u0131").setRequired(true)).addStringOption((option) => option.setName("odul").setDescription("Birinci odul").setRequired(true)).addIntegerOption((option) => option.setName("kazanan-sayisi").setDescription("Kazanan say\u0131s\u0131").setMinValue(1).setMaxValue(50).setRequired(true)).addIntegerOption((option) => option.setName("sure").setDescription("S\xFCre").setMinValue(1).setRequired(true)).addStringOption(
     (option) => option.setName("birim").setDescription("S\xFCre birimi").setRequired(true).addChoices(
       { name: "Dakika", value: "dakika" },
       { name: "Saat", value: "saat" },
       { name: "G\xFCn", value: "g\xFCn" }
     )
-  ).addStringOption((option) => option.setName("ikinci-\xF6d\xFCl").setDescription("\u0130kinci \xF6d\xFCl")),
-  new SlashCommandBuilder().setName("anket").setDescription("En az iki se\xE7enekli anket ba\u015Flat\u0131r").addStringOption((option) => option.setName("ba\u015Fl\u0131k").setDescription("Anket ba\u015Fl\u0131\u011F\u0131").setRequired(true)).addStringOption((option) => option.setName("se\xE7enek-1").setDescription("Birinci se\xE7enek").setRequired(true)).addStringOption((option) => option.setName("se\xE7enek-2").setDescription("\u0130kinci se\xE7enek").setRequired(true)).addIntegerOption((option) => option.setName("s\xFCre").setDescription("S\xFCre, 0 ise s\xFCresiz").setMinValue(0).setRequired(true)).addStringOption(
+  ).addStringOption((option) => option.setName("ikinci-odul").setDescription("\u0130kinci odul")),
+  new SlashCommandBuilder().setName("anket").setDescription("En az iki se\xE7enekli anket ba\u015Flat\u0131r").addStringOption((option) => option.setName("baslik").setDescription("Anket ba\u015Fl\u0131\u011F\u0131").setRequired(true)).addStringOption((option) => option.setName("secenek-1").setDescription("Birinci se\xE7enek").setRequired(true)).addStringOption((option) => option.setName("secenek-2").setDescription("\u0130kinci se\xE7enek").setRequired(true)).addIntegerOption((option) => option.setName("sure").setDescription("S\xFCre, 0 ise suresiz").setMinValue(0).setRequired(true)).addStringOption(
     (option) => option.setName("birim").setDescription("S\xFCre birimi").setRequired(true).addChoices(
       { name: "Dakika", value: "dakika" },
       { name: "Saat", value: "saat" },
       { name: "G\xFCn", value: "g\xFCn" }
     )
-  ).addStringOption((option) => option.setName("se\xE7enek-3").setDescription("\xDC\xE7\xFCnc\xFC se\xE7enek")).addStringOption((option) => option.setName("se\xE7enek-4").setDescription("D\xF6rd\xFCnc\xFC se\xE7enek")),
-  new SlashCommandBuilder().setName("ticket-kur").setDescription("Ticket sistemini kurar").addRoleOption((option) => option.setName("yetkili").setDescription("Ticket yetkili rol\xFC").setRequired(true)).addStringOption((option) => option.setName("ba\u015Fl\u0131k").setDescription("Ticket ba\u015Fl\u0131\u011F\u0131").setRequired(true)).addStringOption((option) => option.setName("metin").setDescription("Ticket a\xE7\u0131klamas\u0131").setRequired(true)),
+  ).addStringOption((option) => option.setName("secenek-3").setDescription("\xDC\xE7\xFCnc\xFC se\xE7enek")).addStringOption((option) => option.setName("secenek-4").setDescription("D\xF6rd\xFCnc\xFC se\xE7enek")),
+  new SlashCommandBuilder().setName("ticket-kur").setDescription("Ticket sistemini kurar").addRoleOption((option) => option.setName("yetkili").setDescription("Ticket yetkili rol\xFC").setRequired(true)).addStringOption((option) => option.setName("isim").setDescription("Ticket ba\u015Fl\u0131\u011F\u0131").setRequired(true)).addStringOption((option) => option.setName("metin").setDescription("Ticket a\xE7\u0131klamas\u0131").setRequired(true)),
   new SlashCommandBuilder().setName("kelime-kanal").setDescription("Kelime oyununu a\xE7ar").addChannelOption((option) => option.setName("kanal").setDescription("Oyun kanal\u0131").addChannelTypes(ChannelType.GuildText).setRequired(true)).addStringOption((option) => option.setName("kelime").setDescription("Ba\u015Flang\u0131\xE7 kelimesi").setRequired(true)),
   new SlashCommandBuilder().setName("sayisayma").setDescription("Say\u0131 sayma oyununu a\xE7ar").addChannelOption((option) => option.setName("kanal").setDescription("Oyun kanal\u0131").addChannelTypes(ChannelType.GuildText).setRequired(true)),
   new SlashCommandBuilder().setName("dc-ceza").setDescription("Discord ceza log kanal\u0131n\u0131 ayarlar").addChannelOption((option) => option.setName("kanal").setDescription("Log kanal\u0131").addChannelTypes(ChannelType.GuildText).setRequired(true)),
   new SlashCommandBuilder().setName("mc-ceza").setDescription("Minecraft ceza log kanal\u0131n\u0131 ayarlar").addChannelOption((option) => option.setName("kanal").setDescription("Log kanal\u0131").addChannelTypes(ChannelType.GuildText).setRequired(true)),
   new SlashCommandBuilder().setName("mcsohbet").setDescription("Minecraft sohbet/giri\u015F \xE7\u0131k\u0131\u015F kanal\u0131n\u0131 ayarlar").addChannelOption((option) => option.setName("kanal").setDescription("Kanal").addChannelTypes(ChannelType.GuildText).setRequired(true)),
-  new SlashCommandBuilder().setName("owner-ekle").setDescription("Bot owner listesine \xFCye ekler").addUserOption((option) => option.setName("\xFCye").setDescription("Owner yap\u0131lacak \xFCye").setRequired(true)),
+  new SlashCommandBuilder().setName("owner-ekle").setDescription("Bot owner listesine uye ekler").addUserOption((option) => option.setName("uye").setDescription("Owner yap\u0131lacak uye").setRequired(true)),
   new SlashCommandBuilder().setName("owner-list").setDescription("Bot owner listesini g\xF6sterir"),
-  new SlashCommandBuilder().setName("owner-cikar").setDescription("Bot owner listesinden \xFCye \xE7\u0131kar\u0131r").addUserOption((option) => option.setName("\xFCye").setDescription("\xC7\u0131kar\u0131lacak \xFCye").setRequired(true)),
+  new SlashCommandBuilder().setName("owner-cikar").setDescription("Bot owner listesinden uye \xE7\u0131kar\u0131r").addUserOption((option) => option.setName("uye").setDescription("\xC7\u0131kar\u0131lacak uye").setRequired(true)),
   new SlashCommandBuilder().setName("likkoruma").setDescription("Link korumas\u0131n\u0131 a\xE7ar"),
   new SlashCommandBuilder().setName("likkormakapat").setDescription("Link korumas\u0131n\u0131 kapat\u0131r"),
   new SlashCommandBuilder().setName("bakim").setDescription("Minecraft bak\u0131m modunu ayarlar").addStringOption(
@@ -364,7 +364,7 @@ var commands = [
   new SlashCommandBuilder().setName("site").setDescription("Cubixora web sitesini g\xF6sterir"),
   new SlashCommandBuilder().setName("site-ekle").setDescription("Site adresini ayarlar").addStringOption((option) => option.setName("adres").setDescription("HTTPS site adresi").setRequired(true)),
   new SlashCommandBuilder().setName("site-cikar").setDescription("Site adresini varsay\u0131lana d\xF6nd\xFCr\xFCr"),
-  new SlashCommandBuilder().setName("profil").setDescription("Oyuncunun Discord profil foto\u011Fraf\u0131n\u0131 g\xF6sterir").addUserOption((option) => option.setName("\xFCye").setDescription("\xDCye")),
+  new SlashCommandBuilder().setName("profil").setDescription("Oyuncunun Discord profil foto\u011Fraf\u0131n\u0131 g\xF6sterir").addUserOption((option) => option.setName("uye").setDescription("\xDCye")),
   new SlashCommandBuilder().setName("yardim").setDescription("Bot komutlar\u0131n\u0131 g\xF6sterir")
 ].map((command) => command.toJSON());
 function guildMember(interaction) {
@@ -440,7 +440,7 @@ async function finishGiveaway(id) {
   await message?.edit({ content: `\u{1F389} **\xC7ekili\u015F bitti!**
 Kazananlar: ${mention}
 \xD6d\xFCl: **${record.firstPrize}**${record.secondPrize ? `
-\u0130kinci \xF6d\xFCl: **${record.secondPrize}**` : ""}` }).catch(() => void 0);
+\u0130kinci odul: **${record.secondPrize}**` : ""}` }).catch(() => void 0);
   if (message?.channel.isTextBased() && "send" in message.channel) {
     await message.channel.send(`\u{1F389} Tebrikler ${mention}!`).catch(() => void 0);
   }
@@ -478,7 +478,7 @@ async function handleCommand(interaction) {
     return;
   }
   if (command === "profil") {
-    const user = interaction.options.getUser("\xFCye") ?? interaction.user;
+    const user = interaction.options.getUser("uye") ?? interaction.user;
     await interaction.reply({ embeds: [new EmbedBuilder().setTitle(`${user.username} profili`).setImage(user.displayAvatarURL({ size: 1024 })).setColor(5793266)] });
     return;
   }
@@ -492,7 +492,7 @@ async function handleCommand(interaction) {
       await interaction.reply({ content: "Bu i\u015Flem yaln\u0131zca bot owner i\xE7in kullan\u0131labilir.", ephemeral: true });
       return;
     }
-    const user = interaction.options.getUser("\xFCye", true);
+    const user = interaction.options.getUser("uye", true);
     if (command === "owner-ekle") store.addOwner(user.id);
     else store.removeOwner(user.id);
     await interaction.reply(`${user} ${command === "owner-ekle" ? "owner listesine eklendi." : "owner listesinden \xE7\u0131kar\u0131ld\u0131."}`);
@@ -546,7 +546,7 @@ async function handleCommand(interaction) {
   }
   if (command === "ban") {
     if (!canManage(member, PermissionFlagsBits.BanMembers)) return void interaction.reply({ content: "\xDCyeleri Yasakla yetkisi gerekli.", ephemeral: true });
-    const user = interaction.options.getUser("\xFCye", true);
+    const user = interaction.options.getUser("uye", true);
     const reason = trimReason(interaction.options.getString("sebep") ?? void 0);
     await interaction.guild.members.ban(user, { reason });
     await interaction.reply(`${user.tag} yasakland\u0131. Sebep: ${reason}`);
@@ -555,12 +555,12 @@ async function handleCommand(interaction) {
   }
   if (command === "mute") {
     if (!canManage(member, PermissionFlagsBits.ModerateMembers)) return void interaction.reply({ content: "\xDCyelere Zaman A\u015F\u0131m\u0131 Uygula yetkisi gerekli.", ephemeral: true });
-    const user = interaction.options.getUser("\xFCye", true);
+    const user = interaction.options.getUser("uye", true);
     const target = await interaction.guild.members.fetch(user.id);
-    const amount = interaction.options.getInteger("s\xFCre", true);
+    const amount = interaction.options.getInteger("sure", true);
     const unit = interaction.options.getString("birim", true);
     const milliseconds = parseDuration(amount, unit);
-    if (!milliseconds) return void interaction.reply({ content: "Ge\xE7ersiz s\xFCre.", ephemeral: true });
+    if (!milliseconds) return void interaction.reply({ content: "Ge\xE7ersiz sure.", ephemeral: true });
     const reason = trimReason(interaction.options.getString("sebep") ?? void 0);
     await applyMute(target, milliseconds, reason);
     await interaction.reply(`${user.tag} ${durationText(amount, unit)} susturuldu. Sebep: ${reason}`);
@@ -619,7 +619,7 @@ async function handleCommand(interaction) {
     const role = interaction.options.getRole("yetkili", true);
     store.setTicket(interaction.guild.id, {
       staffRoleId: role.id,
-      title: interaction.options.getString("ba\u015Fl\u0131k", true),
+      title: interaction.options.getString("isim", true),
       text: interaction.options.getString("metin", true)
     });
     const row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId("ticket-open").setLabel("Ticket A\xE7").setStyle(ButtonStyle.Primary));
@@ -627,29 +627,29 @@ async function handleCommand(interaction) {
     return;
   }
   if (command === "anket") {
-    const choices = [1, 2, 3, 4].map((index) => interaction.options.getString(`se\xE7enek-${index}`)).filter((choice) => Boolean(choice));
-    const title = interaction.options.getString("ba\u015Fl\u0131k", true);
-    const amount = interaction.options.getInteger("s\xFCre", true);
+    const choices = [1, 2, 3, 4].map((index) => interaction.options.getString(`secenek-${index}`)).filter((choice) => Boolean(choice));
+    const title = interaction.options.getString("baslik", true);
+    const amount = interaction.options.getInteger("sure", true);
     const unit = interaction.options.getString("birim", true);
     const duration = amount === 0 ? null : parseDuration(amount, unit);
     const embed = new EmbedBuilder().setTitle(`\u{1F4CA} ${title}`).setDescription(choices.map((choice, index) => `${["1\uFE0F\u20E3", "2\uFE0F\u20E3", "3\uFE0F\u20E3", "4\uFE0F\u20E3"][index]} ${choice}`).join("\n")).setColor(5763719).setFooter({ text: duration ? `${amount} ${unit} sonra kapan\u0131r` : "S\xFCresiz anket" });
     const message = await interaction.reply({ embeds: [embed], fetchReply: true });
     for (let index = 0; index < choices.length; index++) await message.react(["1\uFE0F\u20E3", "2\uFE0F\u20E3", "3\uFE0F\u20E3", "4\uFE0F\u20E3"][index]);
-    if (duration) setTimeout(() => message.edit({ content: "Anket s\xFCresi doldu.", embeds: [embed] }).catch(() => void 0), duration);
+    if (duration) setTimeout(() => message.edit({ content: "Anket suresi doldu.", embeds: [embed] }).catch(() => void 0), duration);
     return;
   }
   if (command === "cekilis") {
-    const amount = interaction.options.getInteger("s\xFCre", true);
+    const amount = interaction.options.getInteger("sure", true);
     const unit = interaction.options.getString("birim", true);
     const duration = parseDuration(amount, unit);
-    if (!duration) return void interaction.reply({ content: "Ge\xE7ersiz \xE7ekili\u015F s\xFCresi.", ephemeral: true });
-    const firstPrize = interaction.options.getString("\xF6d\xFCl", true);
-    const secondPrize = interaction.options.getString("ikinci-\xF6d\xFCl") ?? void 0;
-    const winnerCount = interaction.options.getInteger("kazanan-say\u0131s\u0131", true);
-    const title = interaction.options.getString("ba\u015Fl\u0131k", true);
+    if (!duration) return void interaction.reply({ content: "Ge\xE7ersiz \xE7ekili\u015F suresi.", ephemeral: true });
+    const firstPrize = interaction.options.getString("odul", true);
+    const secondPrize = interaction.options.getString("ikinci-odul") ?? void 0;
+    const winnerCount = interaction.options.getInteger("kazanan-sayisi", true);
+    const title = interaction.options.getString("baslik", true);
     const end = Date.now() + duration;
     const embed = new EmbedBuilder().setTitle(`\u{1F389} ${title}`).setDescription(`\xD6d\xFCl: **${firstPrize}**${secondPrize ? `
-\u0130kinci \xF6d\xFCl: **${secondPrize}**` : ""}
+\u0130kinci odul: **${secondPrize}**` : ""}
 Kat\u0131lmak i\xE7in \u{1F389} tepkisine bas\u0131n.`).setColor(16762967).setFooter({ text: `${winnerCount} kazanan \u2022 ${amount} ${unit}` });
     const message = await interaction.reply({ embeds: [embed], fetchReply: true });
     await message.react("\u{1F389}");
