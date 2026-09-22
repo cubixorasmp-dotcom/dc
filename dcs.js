@@ -269,11 +269,12 @@ function normalizeText(text) {
 }
 
 // services/discord-bot/src/index.ts
-var token = process.env.DISCORD_TOKEN;
-if (!token) {
+var rawToken = process.env.DISCORD_TOKEN?.trim();
+var normalizedToken = rawToken?.replace(/^Bot\s+/i, "");
+if (!normalizedToken) {
   throw new Error("DISCORD_TOKEN eksik. Replit Secrets veya Render Environment Variables i\xE7ine ekleyin.");
 }
-var discordToken = token;
+var discordToken = normalizedToken;
 var client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
